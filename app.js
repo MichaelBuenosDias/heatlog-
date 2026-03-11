@@ -29,6 +29,7 @@ const poleSortuj = document.getElementById('sortuj');
 const sekcjaFormularz = document.getElementById('sekcja-formularz');
 const sekcjaLista = document.getElementById('sekcja-lista');
 const sekcjaSzczegoly = document.getElementById('sekcja-szczegoly');
+const sekcjaRaport = document.getElementById('sekcja-raport');
 const formularzWizyty = document.getElementById('formularz-wizyty');
 const listaWizyt = document.getElementById('lista-wizyt');
 const szczegolyNaglowek = document.getElementById('szczegoly-naglowek');
@@ -417,6 +418,73 @@ function filtrujIRenderuj() {
 poleSzukaj.addEventListener('input', filtrujIRenderuj);
 filtrStatus.addEventListener('change', filtrujIRenderuj);
 poleSortuj.addEventListener('change', filtrujIRenderuj);
+
+
+// =============================================
+// ETAP 6: Drukowanie raportu
+// =============================================
+
+function drukujRaport() {
+  // Szukamy urządzenia po aktualnie wybranym id
+  const urzadzenie = urzadzenia.find(function(u) {
+    return u.id === aktualneUrzadzenieId;
+  });
+
+  // Zabezpieczenie — jeśli coś poszło nie tak i id nie pasuje
+  if (!urzadzenie) return;
+
+  // Sortujemy wizyty od najnowszej
+  const wizyty = [...(urzadzenie.wizyty || [])].sort(function(a, b) {
+    return new Date(b.data) - new Date(a.data);
+  });
+
+  // Budujemy HTML wizyt do raportu
+  // Jeśli brak wizyt — wyświetlamy komunikat
+  const wizytyHTML = wizyty.length === 0
+    ? '<p>Brak zarejestrowanych wizyt serwisowych.</p>'
+    : wizyty.map(function(w) {
+        return `
+          <div class="raport-wizyta">
+            <h3>Wizyta: ${w.data}</h3>
+            <p><strong>Usterka / zgłoszenie:</strong> ${w.usterka}</p>
+            <p><strong>Wykonane czynności:</strong> ${w.czynnosci}</p>
+            ${w.czesci ? `<p><strong>Użyte części:</strong> ${w.czesci}</p>` : ''}
+          </div>
+        `;
+      }).join('');
+
+  // Data wydruku — formatujemy po polsku
+  const dzisiaj = new Date().toLocaleDateString('pl-PL', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+
+  // Wypełniamy sekcję raportu gotowym HTML
+  sekcjaRaport.innerHTML = `
+    <div class="raport-naglowek">
+      <h1>HeatLog — Raport urządzenia</h1>
+      <p class="raport-meta">Wydrukowano: ${dzisiaj}</p>
+    </div>
+
+    <div class="raport-urzadzenie">
+      <h2>${urzadzenie.nazwa}</h2>
+      <p><strong>Klient:</strong> ${urzadzenie.klient}</p>
+      <p><strong>Lokalizacja:</strong> ${urzadzenie.lokalizacja}</p>
+      <p><strong>Interwał przeglądu:</strong> co ${urzadzenie.interwal || 12} miesięcy</p>
+      <p><strong>Liczba wizyt:</strong> ${wizyty.length}</p>
+    </div>
+
+    <h2>Historia wizyt serwisowych</h2>
+    ${wizytyHTML}
+
+    <div class="raport-stopka">
+      Raport wygenerowany przez HeatLog &mdash; aplikację do zarządzania serwisem wymienników ciepła.
+    </div>
+  `;
+
+  // Otwieramy okno drukowania systemu
+  // @media print w CSS zadba o resztę — schowa aplikację, pokaże raport
+  window.print();
+}
 
 
 // --- START: Renderujemy listę przy pierwszym załadowaniu strony ---

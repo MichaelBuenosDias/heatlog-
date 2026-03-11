@@ -75,6 +75,42 @@
     <section id="sekcja-lista">
       <h2>Lista urządzeń</h2>
 
+      <!-- Pasek wyszukiwania i filtrów -->
+      <div id="pasek-filtrow">
+
+        <div class="pole-formularza">
+          <label for="szukaj">Szukaj</label>
+          <input
+            type="text"
+            id="szukaj"
+            placeholder="Wpisz nazwę klienta lub lokalizację..."
+          />
+        </div>
+
+        <div class="filtry-wiersz">
+
+          <div class="pole-formularza">
+            <label for="filtr-status">Status przeglądu</label>
+            <select id="filtr-status">
+              <option value="wszystkie">Wszystkie statusy</option>
+              <option value="ok">✅ OK</option>
+              <option value="wkrotce">⚠️ Wkrótce</option>
+              <option value="przeterminowany">🔴 Przeterminowane</option>
+            </select>
+          </div>
+
+          <div class="pole-formularza">
+            <label for="sortuj">Sortuj według</label>
+            <select id="sortuj">
+              <option value="dataUtworzenia">Daty dodania (najnowsze)</option>
+              <option value="nazwaRosnaco">Nazwy (A→Z)</option>
+              <option value="terminPrzegladuRosnaco">Terminu przeglądu (najpilniejsze)</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
       <!-- Tu JavaScript będzie wstawiał urządzenia -->
       <ul id="lista-urzadzen">
         <!-- Pusta na start — JS wypełni ją dynamicznie -->
@@ -128,6 +164,14 @@
         <ul id="lista-wizyt"></ul>
       </div>
 
+      <!-- Przycisk drukowania — widoczny tylko w widoku szczegółów -->
+      <button id="btn-drukuj" onclick="drukujRaport()">🖨️ Drukuj raport</button>
+
+    </section>
+
+    <!-- Sekcja 4: Raport do druku — niewidoczna na ekranie, pojawia się tylko przy druku -->
+    <section id="sekcja-raport">
+      <!-- JS wypełni tę sekcję danymi przed drukowaniem -->
     </section>
 
   </main>
