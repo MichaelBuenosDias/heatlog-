@@ -354,6 +354,12 @@ button[type="submit"]:hover {
   border: 1px solid #feb2b2;
 }
 
+.status-brak {
+  background-color: #f7fafc;
+  color: #718096;
+  border: 1px solid #e2e8f0;
+}
+
 /* Lewy kolorowy pasek na karcie urządzenia zależny od statusu */
 .urzadzenie-item.status-ok {
   border-left: 4px solid #48bb78;
@@ -368,4 +374,31 @@ button[type="submit"]:hover {
 .urzadzenie-item.status-przeterminowany {
   border-left: 4px solid #fc8181;
   background-color: #fff5f5;
+}
+
+.urzadzenie-item.status-brak {
+  border-left: 4px solid #cbd5e0;
+  background-color: white;
+}
+
+/* =============================================
+   ETAP 5 — WYSZUKIWANIE I FILTRY
+   ============================================= */
+
+#pasek-filtrow {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+/* Wiersz z dwoma filtrami obok siebie */
+.filtry-wiersz {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.filtry-wiersz .pole-formularza {
+  flex: 1; /* każdy filtr zajmuje równą część szerokości */
+  margin-bottom: 0;
 }

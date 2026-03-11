@@ -1,6 +1,6 @@
 // =============================================
 // HEATLOG — app.js
-// Etap 4: System przypomnień — statusy przeglądów
+// Etap 5: Wyszukiwanie i filtry
 // =============================================
 
 // Klucz pod którym przechowujemy dane w localStorage
@@ -19,6 +19,11 @@ const poleNazwa = document.getElementById('nazwa');
 const poleKlient = document.getElementById('klient');
 const poleLokalizacja = document.getElementById('lokalizacja');
 const poleInterwal = document.getElementById('interwal');
+
+// Elementy paska filtrów
+const poleSzukaj = document.getElementById('szukaj');
+const filtrStatus = document.getElementById('filtr-status');
+const poleSortuj = document.getElementById('sortuj');
 
 // Elementy widoku szczegółów
 const sekcjaFormularz = document.getElementById('sekcja-formularz');
@@ -106,21 +111,18 @@ function zapiszDane() {
 // "Renderowanie" = tworzenie elementów HTML na podstawie danych i wstawianie ich do strony
 // Ta funkcja uruchamia się za każdym razem gdy lista się zmienia
 
-function renderujListe() {
+// Parametr "lista" pozwala przekazać przefiltrowaną tablicę.
+// Jeśli nie podamy argumentu — użyje domyślnie pełnej tablicy urzadzenia.
+function renderujListe(lista = urzadzenia) {
 
-  // Czyścimy obecną zawartość listy przed ponownym rysowaniem
-  // Gdybyśmy tego nie robili, urządzenia by się duplikowały przy każdym dodaniu
   listaUrzadzen.innerHTML = '';
 
-  // Sprawdzamy czy tablica jest pusta
-  if (urzadzenia.length === 0) {
-    listaUrzadzen.innerHTML = '<li class="lista-pusta">Brak urządzeń. Dodaj pierwsze urządzenie powyżej.</li>';
+  if (lista.length === 0) {
+    listaUrzadzen.innerHTML = '<li class="lista-pusta">Brak urządzeń spełniających kryteria wyszukiwania.</li>';
     return;
   }
 
-  // Iterujemy (iterate) po tablicy — przechodzimy przez każde urządzenie
-  // forEach() wywołuje podaną funkcję dla każdego elementu tablicy
-  urzadzenia.forEach(function(urzadzenie) {
+  lista.forEach(function(urzadzenie) {
 
     // Tworzymy nowy element <li> (list item)
     const li = document.createElement('li');
@@ -190,8 +192,13 @@ function obliczStatus(urzadzenie) {
     });
     dataOstatniejWizyty = posortowane[0].data; // format YYYY-MM-DD
   } else {
-    // Brak wizyt — używamy daty dodania urządzenia
-    dataOstatniejWizyty = urzadzenie.dataIso || new Date().toISOString().split('T')[0];
+    // Brak wizyt — nie liczymy niczego, zwracamy neutralny status
+    return {
+      status: 'brak-danych',
+      klasa: 'status-brak',
+      etykieta: '⬜ Brak danych — dodaj wizytę',
+      roznicaDni: null
+    };
   }
 
   // Obliczamy datę następnego przeglądu
@@ -352,6 +359,64 @@ formularzWizyty.addEventListener('submit', function(event) {
   renderujWizyty(urzadzenie);
   formularzWizyty.reset();
 });
+
+
+// --- FILTROWANIE I SORTOWANIE ---
+
+function filtrujIRenderuj() {
+  // Odczytujemy aktualne wartości filtrów
+  // .toLowerCase() zamienia na małe litery — żeby "kowalski" pasowało do "Kowalski"
+  const fraza = poleSzukaj.value.toLowerCase().trim();
+  const wybranyStatus = filtrStatus.value;
+  const kryteriumSortowania = poleSortuj.value;
+
+  // Krok 1: filtrowanie (filtering) — tworzymy nową tablicę spełniającą warunki
+  let wynik = urzadzenia.filter(function(u) {
+
+    // Sprawdzamy czy fraza pasuje do klienta LUB lokalizacji
+    const pasujeFraza = fraza === ''
+      || u.klient.toLowerCase().includes(fraza)
+      || u.lokalizacja.toLowerCase().includes(fraza)
+      || u.nazwa.toLowerCase().includes(fraza);
+
+    // Sprawdzamy czy status pasuje do wybranego filtra
+    const statusInfo = obliczStatus(u);
+    const pasujeStatus = wybranyStatus === 'wszystkie'
+      || statusInfo.status === wybranyStatus;
+
+    // Urządzenie trafia do wyników tylko jeśli OBA warunki są spełnione
+    return pasujeFraza && pasujeStatus;
+  });
+
+  // Krok 2: sortowanie (sorting) — porządkujemy przefiltrowane wyniki
+  // .sort() przyjmuje funkcję porównującą dwa elementy (a, b):
+  //   zwróć liczbę ujemną → a przed b
+  //   zwróć liczbę dodatnią → b przed a
+  //   zwróć 0 → kolejność bez zmian
+  if (kryteriumSortowania === 'nazwaRosnaco') {
+    wynik.sort(function(a, b) {
+      return a.nazwa.localeCompare(b.nazwa, 'pl'); // localeCompare obsługuje polskie znaki
+    });
+  } else if (kryteriumSortowania === 'terminPrzegladuRosnaco') {
+    wynik.sort(function(a, b) {
+      return obliczStatus(a).roznicaDni - obliczStatus(b).roznicaDni; // najpilniejsze pierwsze
+    });
+  } else {
+    // dataUtworzenia — sortujemy po id (większy id = nowszy)
+    wynik.sort(function(a, b) {
+      return b.id - a.id;
+    });
+  }
+
+  renderujListe(wynik);
+}
+
+// Nasłuchujemy na zmiany w polach filtrów
+// 'input' = odpala się przy każdym wciśnięciu klawisza (wyszukiwanie na żywo)
+// 'change' = odpala się gdy zmieni się wartość select
+poleSzukaj.addEventListener('input', filtrujIRenderuj);
+filtrStatus.addEventListener('change', filtrujIRenderuj);
+poleSortuj.addEventListener('change', filtrujIRenderuj);
 
 
 // --- START: Renderujemy listę przy pierwszym załadowaniu strony ---
