@@ -1,0 +1,181 @@
+/* =============================================
+   RESET I PODSTAWY
+   Przeglądarki mają domyślne style — resetujemy
+   je żeby wszystko wyglądało tak samo wszędzie
+   ============================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* padding nie powiększa elementu — bardziej przewidywalne */
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: #f0f4f8;
+  color: #2d3748;
+  min-height: 100vh;
+}
+
+/* =============================================
+   NAGŁÓWEK (header)
+   ============================================= */
+
+header {
+  background-color: #1a365d; /* granatowy — kojarzy się z przemysłem */
+  color: white;
+  padding: 20px 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 4px;
+}
+
+header p {
+  font-size: 0.9rem;
+  opacity: 0.8; /* lekko wyszarzony podtytuł */
+}
+
+/* =============================================
+   GŁÓWNA ZAWARTOŚĆ (main)
+   ============================================= */
+
+main {
+  max-width: 900px;       /* ograniczamy szerokość — tekst na 900px jest czytelniejszy */
+  margin: 30px auto;      /* auto = wyśrodkowanie poziome */
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;              /* odstęp między sekcjami */
+}
+
+/* =============================================
+   SEKCJE (karty)
+   ============================================= */
+
+section {
+  background-color: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+section h2 {
+  font-size: 1.2rem;
+  color: #1a365d;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e2e8f0; /* pozioma linia pod tytułem sekcji */
+}
+
+/* =============================================
+   FORMULARZ
+   ============================================= */
+
+.pole-formularza {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.pole-formularza label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 6px;
+}
+
+.pole-formularza input {
+  padding: 10px 14px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s; /* płynna zmiana koloru ramki przy focus */
+}
+
+.pole-formularza input:focus {
+  outline: none;              /* usuwamy domyślną niebieską ramkę przeglądarki */
+  border-color: #3182ce;      /* własna ramka — niebieska */
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+}
+
+/* Przycisk submit formularza */
+button[type="submit"] {
+  background-color: #2b6cb0;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 4px;
+}
+
+button[type="submit"]:hover {
+  background-color: #1a4f8a;
+}
+
+/* =============================================
+   LISTA URZĄDZEŃ
+   ============================================= */
+
+#lista-urzadzen {
+  list-style: none; /* usuwamy domyślne punktor z <ul> */
+}
+
+/* Jeden element listy = jedno urządzenie */
+.urzadzenie-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  background-color: #f7fafc;
+  transition: box-shadow 0.2s;
+}
+
+.urzadzenie-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Informacje o urządzeniu (lewa strona) */
+.urzadzenie-info h3 {
+  font-size: 1rem;
+  color: #2d3748;
+  margin-bottom: 4px;
+}
+
+.urzadzenie-info p {
+  font-size: 0.82rem;
+  color: #718096;
+}
+
+/* Przycisk usuwania urządzenia */
+.btn-usun {
+  background-color: #fff5f5;
+  color: #c53030;
+  border: 1px solid #feb2b2;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-usun:hover {
+  background-color: #fed7d7;
+}
+
+/* Tekst gdy lista jest pusta */
+.lista-pusta {
+  text-align: center;
+  color: #a0aec0;
+  padding: 30px;
+  font-style: italic;
+}

@@ -1,0 +1,9 @@
+# Folder wewnętrzny Claude Code — nie wrzucamy do repozytorium
+.claude/
+
+# Pliki systemowe Windows
+Thumbs.db
+desktop.ini
+
+# Pliki systemowe macOS
+.DS_Store

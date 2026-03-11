@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <!-- Informacje o stronie — niewidoczne dla użytkownika -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HeatLog — Serwis Wymienników Ciepła</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Górna belka nawigacyjna -->
+  <header>
+    <h1>🔧 HeatLog</h1>
+    <p>System zarządzania serwisem wymienników ciepła</p>
+  </header>
+
+  <!-- Główna zawartość strony -->
+  <main>
+
+    <!-- Sekcja 1: Formularz dodawania nowego urządzenia -->
+    <section id="sekcja-formularz">
+      <h2>Dodaj urządzenie</h2>
+
+      <form id="formularz-urzadzenia">
+
+        <!-- Pole: nazwa urządzenia -->
+        <div class="pole-formularza">
+          <label for="nazwa">Nazwa urządzenia</label>
+          <input
+            type="text"
+            id="nazwa"
+            placeholder="np. Wymiennik płytowy Alfa Laval"
+            required
+          />
+        </div>
+
+        <!-- Pole: klient -->
+        <div class="pole-formularza">
+          <label for="klient">Klient</label>
+          <input
+            type="text"
+            id="klient"
+            placeholder="np. Jan Kowalski / Firma XYZ"
+            required
+          />
+        </div>
+
+        <!-- Pole: lokalizacja -->
+        <div class="pole-formularza">
+          <label for="lokalizacja">Lokalizacja</label>
+          <input
+            type="text"
+            id="lokalizacja"
+            placeholder="np. Warszawa, ul. Przemysłowa 5"
+            required
+          />
+        </div>
+
+        <button type="submit">+ Dodaj urządzenie</button>
+
+      </form>
+    </section>
+
+    <!-- Sekcja 2: Lista dodanych urządzeń -->
+    <section id="sekcja-lista">
+      <h2>Lista urządzeń</h2>
+
+      <!-- Tu JavaScript będzie wstawiał urządzenia -->
+      <ul id="lista-urzadzen">
+        <!-- Pusta na start — JS wypełni ją dynamicznie -->
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- Skrypt JS ładujemy na końcu — żeby HTML zdążył się wczytać przed kodem -->
+  <script src="app.js"></script>
+
+</body>
+</html>
