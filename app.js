@@ -1,6 +1,6 @@
 // =============================================
 // HEATLOG — app.js
-// Etap 3: Widok szczegółów + wizyty serwisowe
+// Etap 4: System przypomnień — statusy przeglądów
 // =============================================
 
 // Klucz pod którym przechowujemy dane w localStorage
@@ -18,6 +18,7 @@ const listaUrzadzen = document.getElementById('lista-urzadzen');
 const poleNazwa = document.getElementById('nazwa');
 const poleKlient = document.getElementById('klient');
 const poleLokalizacja = document.getElementById('lokalizacja');
+const poleInterwal = document.getElementById('interwal');
 
 // Elementy widoku szczegółów
 const sekcjaFormularz = document.getElementById('sekcja-formularz');
@@ -67,12 +68,15 @@ formularz.addEventListener('submit', function(event) {
   // Tworzymy obiekt (object) reprezentujący jedno urządzenie
   // Obiekt to zbiór powiązanych danych opisanych parami klucz: wartość
   const noweUrzadzenie = {
-    id: Date.now(),    // unikalny identyfikator — liczba milisekund od 1970 roku
+    id: Date.now(),
     nazwa: nazwa,
     klient: klient,
     lokalizacja: lokalizacja,
-    dataUtworzenia: new Date().toLocaleDateString('pl-PL'), // np. "11.03.2026"
-    wizyty: []         // pusta tablica wizyt — wypełni się w Etapie 3
+    // dataIso — data w formacie YYYY-MM-DD, potrzebna do obliczeń dat
+    dataIso: new Date().toISOString().split('T')[0],
+    dataUtworzenia: new Date().toLocaleDateString('pl-PL'),
+    interwal: parseInt(poleInterwal.value), // 6 lub 12 — parseInt zamienia string na liczbę
+    wizyty: []
   };
 
   // Dodajemy obiekt do tablicy metodą .push()
@@ -124,16 +128,20 @@ function renderujListe() {
 
     // Wstawiamy HTML wewnątrz <li> używając template literals (szablonów tekstowych)
     // Backticki ` ` pozwalają wstawiać zmienne JS bezpośrednio w tekście przez ${}
-    // Liczymy wizyty — jeśli urządzenie było dodane przed Etapem 3, wizyty mogą nie istnieć
     const liczbaWizyt = urzadzenie.wizyty ? urzadzenie.wizyty.length : 0;
+    const statusInfo = obliczStatus(urzadzenie);
+
+    // Dodajemy klasę statusu do elementu <li> — zmienia kolor lewego paska
+    li.classList.add(statusInfo.klasa);
 
     li.innerHTML = `
       <div class="urzadzenie-info">
         <h3>${urzadzenie.nazwa}</h3>
         <p>👤 ${urzadzenie.klient} &nbsp;|&nbsp; 📍 ${urzadzenie.lokalizacja}</p>
         <p style="font-size: 0.78rem; color: #a0aec0; margin-top: 4px;">
-          Dodano: ${urzadzenie.dataUtworzenia} &nbsp;|&nbsp; Wizyty: ${liczbaWizyt}
+          Dodano: ${urzadzenie.dataUtworzenia} &nbsp;|&nbsp; Wizyty: ${liczbaWizyt} &nbsp;|&nbsp; Przegląd: co ${urzadzenie.interwal || 12} mies.
         </p>
+        <span class="status-badge ${statusInfo.klasa}">${statusInfo.etykieta}</span>
       </div>
       <div class="urzadzenie-akcje">
         <button class="btn-szczegoly" onclick="pokazWidokSzczegoly(${urzadzenie.id})">Szczegóły</button>
@@ -164,6 +172,58 @@ function usunUrzadzenie(id) {
 
   zapiszDane();
   renderujListe();
+}
+
+
+// --- OBLICZANIE STATUSU PRZEGLĄDU ---
+// Funkcja zwraca obiekt z informacjami o statusie urządzenia
+
+function obliczStatus(urzadzenie) {
+  const interwal = urzadzenie.interwal || 12; // domyślnie 12 jeśli brak (starsze dane)
+
+  // Szukamy daty ostatniej wizyty — sortujemy i bierzemy pierwszą (najnowszą)
+  let dataOstatniejWizyty;
+
+  if (urzadzenie.wizyty && urzadzenie.wizyty.length > 0) {
+    const posortowane = [...urzadzenie.wizyty].sort(function(a, b) {
+      return new Date(b.data) - new Date(a.data);
+    });
+    dataOstatniejWizyty = posortowane[0].data; // format YYYY-MM-DD
+  } else {
+    // Brak wizyt — używamy daty dodania urządzenia
+    dataOstatniejWizyty = urzadzenie.dataIso || new Date().toISOString().split('T')[0];
+  }
+
+  // Obliczamy datę następnego przeglądu
+  // Tworzymy obiekt Date z ostatniej wizyty i dodajemy miesiące
+  const dataNastepnego = new Date(dataOstatniejWizyty + 'T00:00:00');
+  dataNastepnego.setMonth(dataNastepnego.getMonth() + interwal);
+
+  // Liczymy ile dni pozostało do przeglądu
+  // Math.ceil zaokrągla w górę — np. 0.3 dnia → 1 dzień
+  const dzisiaj = new Date();
+  dzisiaj.setHours(0, 0, 0, 0); // zerujemy godziny żeby porównywać tylko daty
+  const roznicaMs = dataNastepnego - dzisiaj; // różnica w milisekundach
+  const roznicaDni = Math.ceil(roznicaMs / (1000 * 60 * 60 * 24)); // ms → dni
+
+  // Przypisujemy status na podstawie liczby dni
+  let status, etykieta, klasa;
+
+  if (roznicaDni > 30) {
+    status = 'ok';
+    klasa = 'status-ok';
+    etykieta = `✅ OK — ${roznicaDni} dni do przeglądu`;
+  } else if (roznicaDni >= 0) {
+    status = 'wkrotce';
+    klasa = 'status-wkrotce';
+    etykieta = `⚠️ Wkrótce — ${roznicaDni} dni do przeglądu`;
+  } else {
+    status = 'przeterminowany';
+    klasa = 'status-przeterminowany';
+    etykieta = `🔴 Przeterminowany — ${Math.abs(roznicaDni)} dni po terminie`;
+  }
+
+  return { status, klasa, etykieta, roznicaDni };
 }
 
 

@@ -303,3 +303,69 @@ button[type="submit"]:hover {
 .wizyta-item .wizyta-pole strong {
   color: #2d3748;
 }
+
+/* =============================================
+   ETAP 4 — SYSTEM PRZYPOMNIEŃ
+   ============================================= */
+
+/* Pole select (lista rozwijana) — wyrównujemy do stylu inputów */
+.pole-formularza select {
+  padding: 10px 14px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.pole-formularza select:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+}
+
+/* Badge (znacznik) statusu przeglądu */
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.status-ok {
+  background-color: #f0fff4;
+  color: #276749;
+  border: 1px solid #9ae6b4;
+}
+
+.status-wkrotce {
+  background-color: #fffff0;
+  color: #975a16;
+  border: 1px solid #f6e05e;
+}
+
+.status-przeterminowany {
+  background-color: #fff5f5;
+  color: #c53030;
+  border: 1px solid #feb2b2;
+}
+
+/* Lewy kolorowy pasek na karcie urządzenia zależny od statusu */
+.urzadzenie-item.status-ok {
+  border-left: 4px solid #48bb78;
+  background-color: white;
+}
+
+.urzadzenie-item.status-wkrotce {
+  border-left: 4px solid #ecc94b;
+  background-color: white;
+}
+
+.urzadzenie-item.status-przeterminowany {
+  border-left: 4px solid #fc8181;
+  background-color: #fff5f5;
+}
