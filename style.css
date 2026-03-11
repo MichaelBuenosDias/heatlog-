@@ -156,6 +156,28 @@ button[type="submit"]:hover {
   color: #718096;
 }
 
+/* Kontener na przyciski akcji urządzenia */
+.urzadzenie-akcje {
+  display: flex;
+  gap: 8px;
+}
+
+/* Przycisk szczegółów urządzenia */
+.btn-szczegoly {
+  background-color: #ebf8ff;
+  color: #2b6cb0;
+  border: 1px solid #bee3f8;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-szczegoly:hover {
+  background-color: #bee3f8;
+}
+
 /* Przycisk usuwania urządzenia */
 .btn-usun {
   background-color: #fff5f5;
@@ -178,4 +200,106 @@ button[type="submit"]:hover {
   color: #a0aec0;
   padding: 30px;
   font-style: italic;
+}
+
+/* =============================================
+   ETAP 3 — WIDOK SZCZEGÓŁÓW
+   ============================================= */
+
+/* Klasa ukrywająca element — JS ją dodaje i usuwa */
+.ukryty {
+  display: none;
+}
+
+/* Przycisk powrotu */
+#btn-powrot {
+  background: none;
+  border: none;
+  color: #2b6cb0;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+#btn-powrot:hover {
+  text-decoration: underline;
+}
+
+/* Nagłówek z danymi urządzenia */
+#szczegoly-naglowek {
+  background-color: #ebf4ff;
+  border: 1px solid #bee3f8;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+#szczegoly-naglowek h2 {
+  color: #1a365d;
+  border: none;
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+#szczegoly-naglowek p {
+  font-size: 0.85rem;
+  color: #4a5568;
+}
+
+/* Podsekcja wewnątrz widoku szczegółów */
+.podsekcja {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 2px solid #e2e8f0;
+}
+
+.podsekcja h3 {
+  font-size: 1rem;
+  color: #1a365d;
+  margin-bottom: 16px;
+}
+
+/* Pole textarea w formularzu wizyty */
+.pole-formularza textarea {
+  padding: 10px 14px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit; /* textarea domyślnie ma inną czcionkę — wyrównujemy */
+  resize: vertical;     /* użytkownik może rozciągać pole tylko pionowo */
+  transition: border-color 0.2s;
+}
+
+.pole-formularza textarea:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+}
+
+/* Jedna wizyta na liście historii */
+.wizyta-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  background-color: #f7fafc;
+}
+
+.wizyta-item .wizyta-data {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #2b6cb0;
+  margin-bottom: 8px;
+}
+
+.wizyta-item .wizyta-pole {
+  margin-bottom: 6px;
+  font-size: 0.88rem;
+  color: #4a5568;
+}
+
+.wizyta-item .wizyta-pole strong {
+  color: #2d3748;
 }

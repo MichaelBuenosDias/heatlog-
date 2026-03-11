@@ -72,6 +72,55 @@
       </ul>
     </section>
 
+    <!-- Sekcja 3: Widok szczegółów urządzenia — domyślnie ukryty -->
+    <!-- JS pokaże tę sekcję i schowa pozostałe gdy użytkownik kliknie "Szczegóły" -->
+    <section id="sekcja-szczegoly" class="ukryty">
+
+      <!-- Przycisk powrotu do listy -->
+      <button id="btn-powrot" onclick="pokazWidokListy()">← Wróć do listy</button>
+
+      <!-- Nagłówek z danymi urządzenia — JS wypełni dynamicznie -->
+      <div id="szczegoly-naglowek"></div>
+
+      <!-- Formularz dodawania wizyty serwisowej -->
+      <div class="podsekcja">
+        <h3>Dodaj wizytę serwisową</h3>
+
+        <form id="formularz-wizyty">
+
+          <div class="pole-formularza">
+            <label for="wizyta-data">Data wizyty</label>
+            <input type="date" id="wizyta-data" required />
+          </div>
+
+          <div class="pole-formularza">
+            <label for="wizyta-usterka">Opis usterki / zgłoszenia</label>
+            <textarea id="wizyta-usterka" rows="3" placeholder="np. Brak ciepłej wody, wymiennik zaszlamiony" required></textarea>
+          </div>
+
+          <div class="pole-formularza">
+            <label for="wizyta-czynnosci">Wykonane czynności</label>
+            <textarea id="wizyta-czynnosci" rows="3" placeholder="np. Chemiczne czyszczenie płyt, wymiana uszczelek" required></textarea>
+          </div>
+
+          <div class="pole-formularza">
+            <label for="wizyta-czesci">Użyte części (opcjonalnie)</label>
+            <input type="text" id="wizyta-czesci" placeholder="np. Uszczelka Alfa Laval M6-FG x4" />
+          </div>
+
+          <button type="submit">+ Dodaj wizytę</button>
+
+        </form>
+      </div>
+
+      <!-- Historia wizyt — JS wypełni dynamicznie -->
+      <div class="podsekcja">
+        <h3>Historia wizyt</h3>
+        <ul id="lista-wizyt"></ul>
+      </div>
+
+    </section>
+
   </main>
 
   <!-- Skrypt JS ładujemy na końcu — żeby HTML zdążył się wczytać przed kodem -->
