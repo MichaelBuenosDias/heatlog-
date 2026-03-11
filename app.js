@@ -1,7 +1,11 @@
 // =============================================
 // HEATLOG — app.js
-// Etap 1: Formularz + wyświetlanie listy w DOM
+// Etap 2: localStorage — dane przeżywają odświeżenie
 // =============================================
+
+// Klucz pod którym przechowujemy dane w localStorage
+// To jak nazwa szuflady w magazynie
+const KLUCZ_STORAGE = 'heatlog_urzadzenia';
 
 // --- KROK 1: Pobieramy elementy z HTML ---
 // document.getElementById() to jak "wskazanie palcem" na element w HTML
@@ -17,10 +21,12 @@ const poleLokalizacja = document.getElementById('lokalizacja');
 
 
 // --- KROK 2: Tablica (array) przechowująca urządzenia ---
-// Na razie dane żyją tylko w pamięci przeglądarki.
-// Po odświeżeniu strony znikną — to naprawimy w Etapie 2 (localStorage).
+// Przy starcie próbujemy odczytać dane z localStorage.
+// localStorage.getItem() zwraca tekst (string) lub null jeśli nic nie ma.
+// JSON.parse() zamienia tekst z powrotem na tablicę JS.
 
-let urzadzenia = []; // pusta tablica na start
+const zapisaneDane = localStorage.getItem(KLUCZ_STORAGE);
+let urzadzenia = zapisaneDane ? JSON.parse(zapisaneDane) : [];
 
 
 // --- KROK 3: Nasłuchiwanie na wysłanie formularza ---
@@ -60,7 +66,8 @@ formularz.addEventListener('submit', function(event) {
   // .push() wstawia nowy element na koniec tablicy
   urzadzenia.push(noweUrzadzenie);
 
-  // Renderujemy (render) zaktualizowaną listę w DOM
+  // Zapisujemy do localStorage i renderujemy zaktualizowaną listę
+  zapiszDane();
   renderujListe();
 
   // Czyścimy pola formularza po dodaniu
@@ -69,7 +76,16 @@ formularz.addEventListener('submit', function(event) {
 });
 
 
-// --- KROK 4: Funkcja renderująca listę ---
+// --- KROK 4: Funkcja zapisująca dane do localStorage ---
+// JSON.stringify() zamienia tablicę JS na tekst (string) — localStorage przyjmuje tylko tekst
+// Bez tego dostalibyśmy "[object Object]" zamiast prawdziwych danych
+
+function zapiszDane() {
+  localStorage.setItem(KLUCZ_STORAGE, JSON.stringify(urzadzenia));
+}
+
+
+// --- KROK 5: Funkcja renderująca listę ---
 // "Renderowanie" = tworzenie elementów HTML na podstawie danych i wstawianie ich do strony
 // Ta funkcja uruchamia się za każdym razem gdy lista się zmienia
 
@@ -127,11 +143,12 @@ function usunUrzadzenie(id) {
     return u.id !== id;
   });
 
+  zapiszDane();
   renderujListe();
 }
 
 
 // --- START: Renderujemy listę przy pierwszym załadowaniu strony ---
-// Na razie tablica jest pusta więc pokaże komunikat "Brak urządzeń"
-// W Etapie 2 tu wczytamy dane z localStorage
+// Dane zostały już wczytane z localStorage na górze pliku (KROK 2)
+// Jeśli coś było zapisane — pojawi się od razu po otwarciu strony
 renderujListe();
